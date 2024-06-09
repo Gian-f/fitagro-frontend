@@ -24,20 +24,9 @@ android {
 
     buildTypes {
         release {
-            // Enables code shrinking, obfuscation, and optimization for only
-            // your project's release build type. Make sure to use a build
-            // variant with `isDebuggable=false`.
             isMinifyEnabled = true
-
             isDebuggable = false
-
-            // Enables resource shrinking, which is performed by the
-            // Android Gradle plugin.
             isShrinkResources = true
-
-            // Includes the default ProGuard rules files that are packaged with
-            // the Android Gradle plugin. To learn more, go to the section about
-            // R8 configuration files.
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -46,9 +35,6 @@ android {
         }
         debug {
             isMinifyEnabled = false
-
-            // Enables resource shrinking, which is performed by the
-            // Android Gradle plugin.
             isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -88,13 +74,45 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.view)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.lottie.files)
     implementation(libs.tensorflowLite)
-    implementation(libs.androidx.lifecycle.runtime.compose.android)
+    implementation(libs.tensorflowgpu)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.tensorflowtask)
+    implementation(libs.tensorgpu)
+    implementation(libs.squareup.retrofit.preferences)
+    implementation(libs.squareup.retrofit.converter.gson)
+    implementation(libs.squareup.okhttp3.logging.interceptor)
+    implementation(libs.squareup.okhttp3)
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.ui.text.google.fonts)
+    implementation(libs.play.services.mlkit.barcode.scanning)
 
-    //Dagger - Hilt
+    val cameraxVersion = "1.3.0-rc01"
+
+    implementation("androidx.camera:camera-core:$cameraxVersion")
+    implementation("androidx.camera:camera-camera2:$cameraxVersion")
+    implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
+    implementation("androidx.camera:camera-video:$cameraxVersion")
+
+    implementation("androidx.camera:camera-view:$cameraxVersion")
+    implementation("androidx.camera:camera-extensions:$cameraxVersion")
+
+    implementation("org.tensorflow:tensorflow-lite-task-vision:0.4.0")
+    implementation("org.tensorflow:tensorflow-lite-gpu-delegate-plugin:0.4.0")
+    implementation("org.tensorflow:tensorflow-lite-gpu:2.9.0")
+    implementation("org.tensorflow:tensorflow-lite-metadata:0.1.0")
+    implementation("com.google.mlkit:image-labeling:17.0.8")
+    implementation("org.tensorflow:tensorflow-lite-task-vision:0.4.0")
+
+    implementation(libs.coil)
+
+
+    // Dagger - Hilt
     implementation(libs.google.hilt.android)
     implementation(libs.androix.hilt.common)
     ksp(libs.google.hilt.compiler)

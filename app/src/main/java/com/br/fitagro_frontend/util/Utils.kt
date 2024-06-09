@@ -58,6 +58,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.br.fitagro_frontend.R
 import com.br.fitagro_frontend.data.enums.FabOption
+import com.br.fitagro_frontend.ui.theme.primaryLight
 import kotlinx.coroutines.launch
 
 class CutOutShape : Shape {
@@ -103,7 +104,7 @@ class CutOutShape : Shape {
 object Utils {
     @Composable
     fun ExpandableFAB(
-        onBarcodeClicked: (String) -> Unit,
+        onDigitClicked: (String) -> Unit,
         onQrCodeClicked: (String) -> Unit,
     ) {
         var expanded by remember { mutableStateOf(false) }
@@ -117,7 +118,7 @@ object Utils {
                 if (expanded) {
                     ExtendedFloatingActionButton(
                         modifier = Modifier.width(200.dp),
-                        containerColor = MaterialTheme.colorScheme.inverseSurface,
+                        containerColor = primaryLight,
                         onClick = { onQrCodeClicked.invoke(FabOption.QRCODE.value) },
                     ) {
                         Row(
@@ -125,7 +126,7 @@ object Utils {
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text("QRCode", color = Color.White)
+                            Text("Scannear cultura", color = Color.White)
                             Icon(
                                 painter = painterResource(id = R.drawable.baseline_qr_code_scanner_24),
                                 contentDescription = null,
@@ -136,17 +137,17 @@ object Utils {
                     Spacer(modifier = Modifier.height(8.dp))
                     ExtendedFloatingActionButton(
                         modifier = Modifier.width(200.dp),
-                        containerColor = MaterialTheme.colorScheme.inverseSurface,
-                        onClick = { onBarcodeClicked.invoke(FabOption.BARCODE.value) },
+                        containerColor = primaryLight,
+                        onClick = { onDigitClicked.invoke(FabOption.BARCODE.value) },
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text("Código de Barras", color = Color.White)
+                            Text("Selecionar cultura", color = Color.White)
                             Icon(
-                                painter = painterResource(id = R.drawable.baseline_barcode_reader_24),
+                                painter = painterResource(id = R.drawable.baseline_colorize_24),
                                 contentDescription = null,
                                 tint = Color.White
 
@@ -157,7 +158,7 @@ object Utils {
                 }
             }
             FloatingActionButton(
-                containerColor = MaterialTheme.colorScheme.inverseSurface,
+                containerColor = primaryLight,
                 onClick = { expanded = !expanded },
                 content = {
                     Icon(
@@ -237,7 +238,12 @@ object Utils {
                         Button(
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(12.dp),
-                            colors = ButtonColors(Color.Black, Color.White, Color.Black, Color.Black),
+                            colors = ButtonColors(
+                                Color.Black,
+                                Color.White,
+                                Color.Black,
+                                Color.Black
+                            ),
                             onClick = {
                                 scope.launch { state.hide() }
                                 onDismiss.invoke()

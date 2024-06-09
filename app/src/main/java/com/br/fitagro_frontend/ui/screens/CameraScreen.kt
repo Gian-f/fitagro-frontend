@@ -3,14 +3,11 @@ package com.br.fitagro_frontend.ui.screens
 import android.content.pm.ActivityInfo
 import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.SystemBarStyle
-import androidx.activity.enableEdgeToEdge
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,12 +25,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
@@ -46,8 +43,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.br.fitagro_frontend.BarcodeAnalyzer
 import com.br.fitagro_frontend.R
-import com.br.fitagro_frontend.data.enums.FabOption
 import com.br.fitagro_frontend.domain.navigation.Screen
 import com.br.fitagro_frontend.domain.viewmodel.MainViewModel
 import com.br.fitagro_frontend.util.CutOutShape
@@ -57,7 +54,7 @@ import com.br.fitagro_frontend.util.Utils.ShowErrorSheet
 @Composable
 fun CameraScreen(
     navController: NavController,
-    viewModel: MainViewModel
+    viewModel: MainViewModel,
 ) {
     val context = LocalContext.current as ComponentActivity
     val errorMessage by viewModel.errorMessage.collectAsStateWithLifecycle()
@@ -65,6 +62,20 @@ fun CameraScreen(
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraProviderFuture = remember {
         ProcessCameraProvider.getInstance(context)
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.isResultLoading.value = false
+        viewModel.setIsErrorDialogVisible(false)
+        viewModel.clearBarcodeInput()
+        viewModel.clearErrorMessage()
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.isResultLoading.value = false
+            viewModel.setIsErrorDialogVisible(false)
+        }
     }
 
     context.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -84,7 +95,7 @@ fun CameraScreen(
                 val imageAnalysis = ImageAnalysis.Builder().build()
                 imageAnalysis.setAnalyzer(
                     ContextCompat.getMainExecutor(context),
-                    FruitClassifier(navController, context) // Substitua BarcodeAnalyzer por FruitClassifier
+                    BarcodeAnalyzer(context, navController, viewModel)
                 )
 
                 runCatching {
@@ -138,7 +149,7 @@ fun CameraScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    "Aponte a câmera para o QRCode para scannear.",
+                    "Aponte a câmera para o código da fruta que você deseja scannear.",
                     color = Color.White,
                     textAlign = TextAlign.Center,
                     fontSize = 16.sp
@@ -154,7 +165,7 @@ fun CameraScreen(
                 onClick = { navController.navigate(Screen.DigitBarcode.route) }) {
                 Text(
                     text =
-                    "Digitar código de barras",
+                    "Digitar nome da fruta",
                     color = Color.White,
                     fontSize = TextUnit(18F, type = TextUnitType.Sp)
                 )
@@ -167,6 +178,7 @@ fun CameraScreen(
     }
 
     if (!errorMessage.isNullOrEmpty()) {
+        viewModel.setIsErrorDialogVisible(true)
         ShowErrorSheet(message = "erro!",
             onDismiss = {
                 navController.popBackStack()

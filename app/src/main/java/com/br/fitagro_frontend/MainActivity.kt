@@ -10,24 +10,17 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.navigation.compose.rememberNavController
 import com.br.fitagro_frontend.domain.navigation.Navigation
 import com.br.fitagro_frontend.ui.theme.FitagrofrontendTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.light(
-                scrim = Color.White.toArgb(),
-                darkScrim = Color.White.toArgb()
-            ),
-            navigationBarStyle = SystemBarStyle.light(
-                scrim = Color.White.toArgb(),
-                darkScrim = Color.White.toArgb()
-            )
-        )
+        enableEdgeToEdge()
         setContent {
             FitagrofrontendTheme {
                 val navController = rememberNavController()
-                Navigation(navController = navController)
+                    Navigation(navController = navController)
             }
         }
     }
