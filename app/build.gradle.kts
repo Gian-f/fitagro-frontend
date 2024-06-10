@@ -108,9 +108,8 @@ dependencies {
     implementation("org.tensorflow:tensorflow-lite-metadata:0.1.0")
     implementation("com.google.mlkit:image-labeling:17.0.8")
     implementation("org.tensorflow:tensorflow-lite-task-vision:0.4.0")
-
+    implementation(libs.coil.compose)
     implementation(libs.coil)
-
 
     // Dagger - Hilt
     implementation(libs.google.hilt.android)

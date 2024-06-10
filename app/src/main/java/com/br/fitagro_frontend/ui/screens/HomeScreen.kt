@@ -32,6 +32,7 @@ import com.br.fitagro_frontend.R
 import com.br.fitagro_frontend.domain.navigation.Screen
 import com.br.fitagro_frontend.domain.viewmodel.MainViewModel
 import com.br.fitagro_frontend.util.Utils.ExpandableFAB
+import com.br.fitagro_frontend.util.Utils.ShowErrorSheet
 
 @Composable
 fun HomeScreen(
@@ -70,11 +71,7 @@ fun HomeScreen(
                     }
                 },
                 onDigitClicked = {
-                    if (isCameraPermissionGranted) {
-                        navController.navigate(Screen.DigitBarcode.route)
-                    } else {
-                        cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
-                    }
+                    navController.navigate(Screen.DigitBarcode.route)
                 }
             )
         }
@@ -103,5 +100,13 @@ fun HomeScreen(
                 )
             }
         }
+    }
+    if (showPermissionsDeniedDialog) {
+        ShowErrorSheet(
+            message = "Permissões negadas podem resultar em funcionalidades indisponíveis.",
+            onDismiss = {
+                showPermissionsDeniedDialog = false
+            }
+        )
     }
 }

@@ -179,9 +179,10 @@ fun CameraScreen(
 
     if (!errorMessage.isNullOrEmpty()) {
         viewModel.setIsErrorDialogVisible(true)
-        ShowErrorSheet(message = "erro!",
+        ShowErrorSheet(message = errorMessage.toString(),
             onDismiss = {
                 navController.popBackStack()
+                viewModel.clearErrorMessage()
             }
         )
     }

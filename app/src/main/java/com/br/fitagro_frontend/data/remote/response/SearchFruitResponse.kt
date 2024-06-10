@@ -31,4 +31,5 @@ data class SearchFruitResponse(
     val organicos: String? = null,
     @SerializedName("SITUACAO")
     val situacao: Boolean? = null,
+    val url: String? = null,
 )

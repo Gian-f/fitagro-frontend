@@ -239,10 +239,10 @@ object Utils {
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(12.dp),
                             colors = ButtonColors(
-                                Color.Black,
+                                primaryLight,
                                 Color.White,
-                                Color.Black,
-                                Color.Black
+                                primaryLight,
+                                primaryLight
                             ),
                             onClick = {
                                 scope.launch { state.hide() }

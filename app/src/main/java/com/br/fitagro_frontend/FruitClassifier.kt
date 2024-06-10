@@ -1,16 +1,13 @@
 package com.br.fitagro_frontend
 
 import android.content.Context
-import android.widget.Toast
+import androidx.annotation.OptIn
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import androidx.navigation.NavController
-import com.br.fitagro_frontend.data.model.Classification
-import com.br.fitagro_frontend.domain.FruitClassifier
 import com.br.fitagro_frontend.domain.navigation.Screen
 import com.br.fitagro_frontend.domain.viewmodel.MainViewModel
-import com.br.fitagro_frontend.presentation.centerCrop
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
@@ -45,7 +42,7 @@ class BarcodeAnalyzer(
         }
     }
 
-    @androidx.annotation.OptIn(ExperimentalGetImage::class)
+    @OptIn(ExperimentalGetImage::class)
     override fun analyze(imageProxy: ImageProxy) {
         if (viewModel.isResultLoading.value || viewModel.isErrorDialogVisible.value) return
         if (isProcessing) return

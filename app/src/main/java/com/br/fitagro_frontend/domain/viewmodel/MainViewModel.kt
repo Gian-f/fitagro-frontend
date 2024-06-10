@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.br.fitagro_frontend.data.remote.response.SearchFruitResponse
 import com.br.fitagro_frontend.domain.repository.MainRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,12 +28,8 @@ class MainViewModel @Inject constructor(private val repository: MainRepository) 
     private val _successMessage = MutableStateFlow<String?>(null)
     var successMessage: MutableStateFlow<String?> = _successMessage
 
-    private val _classeToxicologica = MutableStateFlow<String?>(null)
-    var classeToxicologica: MutableStateFlow<String?> = _classeToxicologica
-
-    private val _classeAmbiental = MutableStateFlow<String?>(null)
-    var classeAmbiental: MutableStateFlow<String?> = _classeAmbiental
-
+    private val _result = MutableStateFlow<SearchFruitResponse?>(null)
+    var result: MutableStateFlow<SearchFruitResponse?> = _result
 
     private val _resultName = MutableStateFlow<String?>(null)
     var resultName: MutableStateFlow<String?> = _resultName
@@ -73,22 +70,17 @@ class MainViewModel @Inject constructor(private val repository: MainRepository) 
                 val result = repository.searchFruit(name)
                 if (result.isSuccess) {
                     resultName.value = name
-                    _classeToxicologica.value =
-                        result.getOrNull().orEmpty()[0].classeToxicologica
-                    _classeAmbiental.value = result.getOrNull()
-                        .orEmpty()[0].classeAmbiental
+                    _result.value = result.getOrNull().orEmpty()[0]
                     clearErrorMessage()
                     clearBarcodeInput()
                     isResultLoading.value = true
                     onSuccess.invoke()
+                } else {
+                    isResultLoading.value = false
+                    _errorMessage.value = "Registros para $name não foram encontrados!"
+                    clearBarcodeInput()
+                    onFailure.invoke()
                 }
-            }.onFailure {
-                isResultLoading.value = false
-                _errorMessage.value =
-                    it.message ?: "Ocorreu um erro ao tentar fazer uma requisição!"
-                clearErrorMessage()
-                clearBarcodeInput()
-                onFailure.invoke()
             }
         }
     }
